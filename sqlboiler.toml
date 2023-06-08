@@ -1,0 +1,15 @@
+wipe=true # Each time new code is generated, completely wipe out the old one.
+output="internal/dbmodel" # Directory in which the generated static code is to be kept.
+pkgname="dbmodel" # The `go` package name used in the generated code.
+add-global-variant=true # Adds global variant of the generated functions, more on this later.
+add-enum-types=true # Generates code for enum types as well.
+no-hooks=true
+no-tests=true
+
+[mysql] # This is the mysql config, which should be self explanatory.
+    dbname="hsr"
+    host="localhost"
+    port= 3306
+    user="root"
+    pass="tin14091998"
+    sslmode="disable"

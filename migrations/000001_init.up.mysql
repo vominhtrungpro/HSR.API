@@ -1,0 +1,9 @@
+CREATE TABLE characters
+(
+    id              INT                         PRIMARY KEY,
+    name            VARCHAR(250)                NOT NULL,
+    rarity          INT                         NOT NULL,
+    element         INT                         NOT NULL,
+    path            INT                         NOT NULL,
+    picture         LONGBLOB               NOT NULL      
+);
