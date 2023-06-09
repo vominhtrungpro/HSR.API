@@ -27,8 +27,8 @@ func (u *charController) Create(ctx context.Context, news model.Character) error
 }
 
 // Update character image
-func (u *charController) UpdateCharacterImage(ctx context.Context, id string, image []byte) error {
-	character, err := u.charsRepo.GetCharById(ctx, id)
+func (u *charController) UpdateCharacterImage(ctx context.Context, name string, image []byte) error {
+	character, err := u.charsRepo.GetCharByName(ctx, name)
 	if err != nil {
 		return err
 	}
@@ -53,4 +53,20 @@ func (u *charController) GetAll(ctx context.Context) ([]charactermodel.SearchRes
 		return characters, err
 	}
 	return characters, nil
+}
+
+func (u *charController) Update(ctx context.Context, request charactermodel.UpdateRequest) error {
+	character, err := u.charsRepo.GetCharById(ctx, request.Id)
+	if err != nil {
+		return err
+	}
+	checkexist := u.charsRepo.CheckNameExist(ctx, character)
+	if checkexist != nil {
+		return checkexist
+	}
+	updateResult := u.charsRepo.Update(ctx, character)
+	if updateResult != nil {
+		return updateResult
+	}
+	return nil
 }

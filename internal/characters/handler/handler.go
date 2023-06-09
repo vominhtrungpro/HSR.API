@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vominhtrungpro/internal/characters"
@@ -38,19 +39,45 @@ func (h charHandler) Create(context *gin.Context) {
 		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
 		return
 	}
+	if errvalid := validatecreate(request); err != nil {
+		http.Error(context.Writer, errvalid.Error(), http.StatusBadRequest)
+		return
+	}
 	var character model.Character
-	character.ID = request.ID
 	character.Name = request.Name
 	character.Rarity = request.Rarity
 	character.Element = request.Element
 	character.Path = request.Path
 	character.Picture = make([]byte, 0)
-	h.charController.Create(context, character)
+	result := h.charController.Create(context, character)
+	if result != nil {
+		http.Error(context.Writer, result.Error(), http.StatusBadRequest)
+		return
+	}
+	context.IndentedJSON(http.StatusOK, "Success")
+}
+
+func (h charHandler) Update(context *gin.Context) {
+	var request charactermodel.UpdateRequest
+	err := json.NewDecoder(context.Request.Body).Decode(&request)
+	if err != nil {
+		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if errvalid := validateupdate(request); err != nil {
+		http.Error(context.Writer, errvalid.Error(), http.StatusBadRequest)
+		return
+	}
+	result := h.charController.Update(context, request)
+	if result != nil {
+		http.Error(context.Writer, result.Error(), http.StatusBadRequest)
+		return
+	}
 	context.IndentedJSON(http.StatusOK, "Success")
 }
 
 func (h charHandler) UpdateCharacterImage(context *gin.Context) {
-	charId := context.Param("id")
+	charname := context.Param("name")
 	file, _, err := context.Request.FormFile("file")
 	if err != nil {
 		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
@@ -61,7 +88,7 @@ func (h charHandler) UpdateCharacterImage(context *gin.Context) {
 		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
 		return
 	}
-	result := h.charController.UpdateCharacterImage(context, charId, image)
+	result := h.charController.UpdateCharacterImage(context, charname, image)
 	if result != nil {
 		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
 		return
@@ -88,4 +115,21 @@ func (h charHandler) GetImageById(context *gin.Context) {
 
 func (h charHandler) Test(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, "oke")
+}
+
+func validatecreate(input charactermodel.CreateRequest) error {
+	if strings.TrimSpace(input.Name) == "" {
+		return errInvalidName
+	}
+	return nil
+}
+
+func validateupdate(input charactermodel.UpdateRequest) error {
+	if strings.TrimSpace(input.Id) == "" {
+		return errInvalidId
+	}
+	if strings.TrimSpace(input.Name) == "" {
+		return errInvalidName
+	}
+	return nil
 }

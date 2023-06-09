@@ -2,12 +2,14 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 
 	"github.com/vominhtrungpro/internal/characters"
 	"github.com/vominhtrungpro/internal/characters/charactermodel"
+	"github.com/vominhtrungpro/internal/characters/generator"
 	"github.com/vominhtrungpro/internal/model/model"
 	"gorm.io/gorm"
 )
@@ -24,8 +26,13 @@ func NewCharsRepository(db *gorm.DB) characters.Repository {
 
 // Create character
 func (r *charsRepo) Create(ctx context.Context, character model.Character) error {
-	err := r.db.Model(&model.Character{}).Create(character).Error
+	id, err := generator.ProductSNF.Generate()
 	if err != nil {
+		return err
+	}
+
+	character.ID = int32(id)
+	if err = r.db.Model(&model.Character{}).Create(character).Error; err != nil {
 		return err
 	}
 
@@ -39,6 +46,31 @@ func (r *charsRepo) GetCharById(ctx context.Context, id string) (model.Character
 		return chardb, err
 	}
 	return chardb, nil
+}
+
+func (r *charsRepo) GetCharByName(ctx context.Context, name string) (model.Character, error) {
+	var chardb model.Character
+	err := r.db.Where("name = ?", name).First(&chardb).Error
+	if err != nil {
+		return chardb, err
+	}
+	return chardb, nil
+}
+
+func (r *charsRepo) CheckNameExist(ctx context.Context, character model.Character) error {
+	err := r.db.Where("id != ? AND name == ?", character.ID, character.Name).Find(&character).Error
+	if err != nil {
+		return errors.New("name exist")
+	}
+	return nil
+}
+
+func (r *charsRepo) Update(ctx context.Context, character model.Character) error {
+	err := r.db.Save(&character).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *charsRepo) UpdateCharImage(ctx context.Context, char model.Character, image []byte) error {

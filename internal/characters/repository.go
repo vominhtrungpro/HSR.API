@@ -10,7 +10,10 @@ import (
 type Repository interface {
 	Create(ctx context.Context, news model.Character) error
 	GetCharById(ctx context.Context, id string) (model.Character, error)
+	GetCharByName(ctx context.Context, name string) (model.Character, error)
 	UpdateCharImage(ctx context.Context, char model.Character, image []byte) error
 	GetImageById(ctx context.Context, id string) ([]byte, string, error)
 	GetAll(ctx context.Context) ([]charactermodel.SearchResult, error)
+	CheckNameExist(ctx context.Context, character model.Character) error
+	Update(ctx context.Context, character model.Character) error
 }

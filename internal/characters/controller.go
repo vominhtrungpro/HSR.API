@@ -10,7 +10,8 @@ import (
 // News use case
 type Controller interface {
 	Create(ctx context.Context, char model.Character) error
-	UpdateCharacterImage(ctx context.Context, id string, image []byte) error
+	UpdateCharacterImage(ctx context.Context, name string, image []byte) error
 	GetImageById(ctx context.Context, id string) ([]byte, string, error)
 	GetAll(ctx context.Context) ([]charactermodel.SearchResult, error)
+	Update(ctx context.Context, request charactermodel.UpdateRequest) error
 }

@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/vominhtrungpro/config"
+	"github.com/vominhtrungpro/internal/characters/generator"
 	"github.com/vominhtrungpro/internal/server"
 	mysqlserver "github.com/vominhtrungpro/pkg/db/mysql"
 )
@@ -20,6 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	generator.InitSnowflakeGenerators()
 	s := server.NewServer(
 		cfg,
 		conn,

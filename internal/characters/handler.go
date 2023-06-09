@@ -1,6 +1,8 @@
 package characters
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 // News HTTP Handlers interface
 type Handlers interface {
@@ -9,4 +11,5 @@ type Handlers interface {
 	UpdateCharacterImage(context *gin.Context)
 	GetImageById(context *gin.Context)
 	GetAll(context *gin.Context)
+	Update(context *gin.Context)
 }

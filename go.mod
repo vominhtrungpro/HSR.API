@@ -8,6 +8,8 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/lib/pq v1.10.9
+	github.com/pkg/errors v0.9.1
+	github.com/sony/sonyflake v1.1.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gen v0.3.22
