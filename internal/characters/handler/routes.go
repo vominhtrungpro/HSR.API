@@ -3,11 +3,12 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/vominhtrungpro/internal/characters"
+	"github.com/vominhtrungpro/internal/middleware"
 )
 
 // Map news routes
 func MapNewsRoutes(charGroup *gin.RouterGroup, h characters.Handlers) {
-	// newsGroup.Use(mw.AuthJWTMiddleware())
+	charGroup.Use(middleware.CORSMiddleware())
 	charGroup.GET("/all", h.GetAll)
 	charGroup.POST("/create", h.Create)
 	charGroup.PUT("/update", h.Update)
