@@ -29,6 +29,7 @@ func newElement(db *gorm.DB, opts ...gen.DOOption) element {
 	_element.ALL = field.NewAsterisk(tableName)
 	_element.ID = field.NewInt32(tableName, "id")
 	_element.Name = field.NewString(tableName, "name")
+	_element.Enname = field.NewString(tableName, "enname")
 	_element.Picture = field.NewBytes(tableName, "picture")
 
 	_element.fillFieldMap()
@@ -42,6 +43,7 @@ type element struct {
 	ALL     field.Asterisk
 	ID      field.Int32
 	Name    field.String
+	Enname  field.String
 	Picture field.Bytes
 
 	fieldMap map[string]field.Expr
@@ -61,6 +63,7 @@ func (e *element) updateTableName(table string) *element {
 	e.ALL = field.NewAsterisk(table)
 	e.ID = field.NewInt32(table, "id")
 	e.Name = field.NewString(table, "name")
+	e.Enname = field.NewString(table, "enname")
 	e.Picture = field.NewBytes(table, "picture")
 
 	e.fillFieldMap()
@@ -78,9 +81,10 @@ func (e *element) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (e *element) fillFieldMap() {
-	e.fieldMap = make(map[string]field.Expr, 3)
+	e.fieldMap = make(map[string]field.Expr, 4)
 	e.fieldMap["id"] = e.ID
 	e.fieldMap["name"] = e.Name
+	e.fieldMap["enname"] = e.Enname
 	e.fieldMap["picture"] = e.Picture
 }
 

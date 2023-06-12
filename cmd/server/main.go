@@ -8,7 +8,12 @@ import (
 	elementgenerator "github.com/vominhtrungpro/internal/elements/generator"
 	"github.com/vominhtrungpro/internal/server"
 	mysqlserver "github.com/vominhtrungpro/pkg/db/mysql"
+	// "gorm.io/driver/mysql"
+	// "gorm.io/gen"
+	// "gorm.io/gorm"
 )
+
+//mysqlserver "github.com/vominhtrungpro/pkg/db/mysql"
 
 func main() {
 	log.Println("Starting api server")

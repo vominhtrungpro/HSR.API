@@ -29,6 +29,7 @@ func newPath(db *gorm.DB, opts ...gen.DOOption) path {
 	_path.ALL = field.NewAsterisk(tableName)
 	_path.ID = field.NewInt32(tableName, "id")
 	_path.Name = field.NewString(tableName, "name")
+	_path.Enname = field.NewString(tableName, "enname")
 	_path.Picture = field.NewBytes(tableName, "picture")
 
 	_path.fillFieldMap()
@@ -42,6 +43,7 @@ type path struct {
 	ALL     field.Asterisk
 	ID      field.Int32
 	Name    field.String
+	Enname  field.String
 	Picture field.Bytes
 
 	fieldMap map[string]field.Expr
@@ -61,6 +63,7 @@ func (p *path) updateTableName(table string) *path {
 	p.ALL = field.NewAsterisk(table)
 	p.ID = field.NewInt32(table, "id")
 	p.Name = field.NewString(table, "name")
+	p.Enname = field.NewString(table, "enname")
 	p.Picture = field.NewBytes(table, "picture")
 
 	p.fillFieldMap()
@@ -78,9 +81,10 @@ func (p *path) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (p *path) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 3)
+	p.fieldMap = make(map[string]field.Expr, 4)
 	p.fieldMap["id"] = p.ID
 	p.fieldMap["name"] = p.Name
+	p.fieldMap["enname"] = p.Enname
 	p.fieldMap["picture"] = p.Picture
 }
 

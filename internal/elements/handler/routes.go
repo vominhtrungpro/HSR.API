@@ -6,6 +6,9 @@ import (
 )
 
 // Map news routes
-func MapNewsRoutes(charGroup *gin.RouterGroup, h elements.Handlers) {
-
+func MapNewsRoutes(elementGroup *gin.RouterGroup, h elements.Handlers) {
+	elementGroup.POST("/create", h.Create)
+	elementGroup.POST("/image/:name", h.UpdateElementImage)
+	elementGroup.POST("/createpath", h.CreatePath)
+	elementGroup.POST("/imagepath/:name", h.UpdatePathImage)
 }

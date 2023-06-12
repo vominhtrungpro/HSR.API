@@ -10,6 +10,7 @@ const TableNamePath = "paths"
 type Path struct {
 	ID      int32  `gorm:"column:id;primaryKey" json:"id"`
 	Name    string `gorm:"column:name;not null" json:"name"`
+	Enname  string `gorm:"column:enname;not null" json:"enname"`
 	Picture []byte `gorm:"column:picture;not null" json:"picture"`
 }
 
