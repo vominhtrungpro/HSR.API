@@ -7,3 +7,17 @@ CREATE TABLE characters
     path            INT                         NOT NULL,
     picture         LONGBLOB               NOT NULL      
 );
+
+CREATE TABLE elements
+(
+    id      INT             PRIMARY KEY,
+    name    VARCHAR(250)    NOT NULL,
+    picture LONGBLOB        NOT NULL
+);
+
+CREATE TABLE paths
+(
+    id      INT             PRIMARY KEY,
+    name    VARCHAR(250)    NOT NULL,
+    picture LONGBLOB        NOT NULL
+);

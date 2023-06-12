@@ -4,7 +4,8 @@ import (
 	"log"
 
 	"github.com/vominhtrungpro/config"
-	"github.com/vominhtrungpro/internal/characters/generator"
+	charactergenerator "github.com/vominhtrungpro/internal/characters/generator"
+	elementgenerator "github.com/vominhtrungpro/internal/elements/generator"
 	"github.com/vominhtrungpro/internal/server"
 	mysqlserver "github.com/vominhtrungpro/pkg/db/mysql"
 )
@@ -21,7 +22,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	generator.InitSnowflakeGenerators()
+	charactergenerator.InitSnowflakeGenerators()
+	elementgenerator.InitSnowflakeGenerators()
 	s := server.NewServer(
 		cfg,
 		conn,
@@ -34,7 +36,7 @@ func main() {
 
 // func generate() {
 // 	conf := gen.Config{
-// 		OutPath: "D:/HSR.API/internal/model/dbmodel",
+// 		OutPath: "../../internal/model/dbmodel",
 // 		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
 // 	}
 // 	g := gen.NewGenerator(conf)

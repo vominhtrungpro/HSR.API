@@ -18,12 +18,16 @@ import (
 var (
 	Q               = new(Query)
 	Character       *character
+	Element         *element
+	Path            *path
 	SchemaMigration *schemaMigration
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Character = &Q.Character
+	Element = &Q.Element
+	Path = &Q.Path
 	SchemaMigration = &Q.SchemaMigration
 }
 
@@ -31,6 +35,8 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:              db,
 		Character:       newCharacter(db, opts...),
+		Element:         newElement(db, opts...),
+		Path:            newPath(db, opts...),
 		SchemaMigration: newSchemaMigration(db, opts...),
 	}
 }
@@ -39,6 +45,8 @@ type Query struct {
 	db *gorm.DB
 
 	Character       character
+	Element         element
+	Path            path
 	SchemaMigration schemaMigration
 }
 
@@ -48,6 +56,8 @@ func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
 		Character:       q.Character.clone(db),
+		Element:         q.Element.clone(db),
+		Path:            q.Path.clone(db),
 		SchemaMigration: q.SchemaMigration.clone(db),
 	}
 }
@@ -64,18 +74,24 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
 		Character:       q.Character.replaceDB(db),
+		Element:         q.Element.replaceDB(db),
+		Path:            q.Path.replaceDB(db),
 		SchemaMigration: q.SchemaMigration.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
 	Character       ICharacterDo
+	Element         IElementDo
+	Path            IPathDo
 	SchemaMigration ISchemaMigrationDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Character:       q.Character.WithContext(ctx),
+		Element:         q.Element.WithContext(ctx),
+		Path:            q.Path.WithContext(ctx),
 		SchemaMigration: q.SchemaMigration.WithContext(ctx),
 	}
 }
