@@ -11,4 +11,5 @@ func MapNewsRoutes(elementGroup *gin.RouterGroup, h elements.Handlers) {
 	elementGroup.POST("/image/:name", h.UpdateElementImage)
 	elementGroup.POST("/createpath", h.CreatePath)
 	elementGroup.POST("/imagepath/:name", h.UpdatePathImage)
+	elementGroup.GET("/filter", h.GetFilter)
 }

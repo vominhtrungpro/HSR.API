@@ -3,6 +3,7 @@ package elements
 import (
 	"context"
 
+	"github.com/vominhtrungpro/internal/elements/elementmodel"
 	"github.com/vominhtrungpro/internal/model/model"
 )
 
@@ -12,4 +13,5 @@ type Controller interface {
 	CreatePath(ctx context.Context, path model.Path) error
 	UpdateElementImage(ctx context.Context, name string, image []byte) error
 	UpdatePathImage(ctx context.Context, name string, image []byte) error
+	GetFilter(ctx context.Context) ([]elementmodel.FilterResponse, error)
 }

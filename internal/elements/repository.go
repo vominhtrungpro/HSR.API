@@ -13,4 +13,6 @@ type Repository interface {
 	GetPathByEnname(ctx context.Context, name string) (model.Path, error)
 	UpdateElementImage(ctx context.Context, element model.Element, image []byte) error
 	UpdatePathImage(ctx context.Context, path model.Path, image []byte) error
+	GetElement(ctx context.Context) ([]model.Element, error)
+	GetPath(ctx context.Context) ([]model.Path, error)
 }

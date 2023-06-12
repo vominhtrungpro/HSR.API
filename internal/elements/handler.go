@@ -8,4 +8,5 @@ type Handlers interface {
 	CreatePath(context *gin.Context)
 	UpdateElementImage(context *gin.Context)
 	UpdatePathImage(context *gin.Context)
+	GetFilter(context *gin.Context)
 }

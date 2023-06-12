@@ -99,3 +99,23 @@ func (r *eleRepo) UpdatePathImage(ctx context.Context, path model.Path, image []
 	}
 	return nil
 }
+
+// Get all element
+func (r *eleRepo) GetElement(ctx context.Context) ([]model.Element, error) {
+	var element []model.Element
+
+	if err := r.db.Order("id").Find(&element).Error; err != nil {
+		return element, err
+	}
+	return element, nil
+}
+
+// Get all path
+func (r *eleRepo) GetPath(ctx context.Context) ([]model.Path, error) {
+	var path []model.Path
+
+	if err := r.db.Order("id").Find(&path).Error; err != nil {
+		return path, err
+	}
+	return path, nil
+}

@@ -21,6 +21,16 @@ func NewElementHandlers(eleController elements.Controller) elements.Handlers {
 	return &eleHandler{eleController: eleController}
 }
 
+// Get filter
+func (h eleHandler) GetFilter(context *gin.Context) {
+	result, err := h.eleController.GetFilter(context)
+	if err != nil {
+		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+	context.IndentedJSON(http.StatusOK, result)
+}
+
 // Create element handler
 func (h eleHandler) Create(context *gin.Context) {
 	var request elementmodel.CreateRequest
