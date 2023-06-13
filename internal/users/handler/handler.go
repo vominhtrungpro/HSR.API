@@ -34,3 +34,19 @@ func (h userHandler) Register(context *gin.Context) {
 	}
 	context.IndentedJSON(http.StatusOK, "Success")
 }
+
+// Login
+func (h userHandler) Login(context *gin.Context) {
+	var request usermodel.LoginInput
+	err := json.NewDecoder(context.Request.Body).Decode(&request)
+	if err != nil {
+		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+	result, err := h.userController.Login(context, request)
+	if err != nil {
+		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+	context.IndentedJSON(http.StatusOK, result)
+}

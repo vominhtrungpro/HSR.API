@@ -70,6 +70,12 @@ github.com/goccy/go-json/internal/encoder/vm_color_indent
 github.com/goccy/go-json/internal/encoder/vm_indent
 github.com/goccy/go-json/internal/errors
 github.com/goccy/go-json/internal/runtime
+# github.com/gofrs/uuid v3.2.0+incompatible
+## explicit
+github.com/gofrs/uuid
+# github.com/golang-jwt/jwt/v5 v5.0.0
+## explicit; go 1.18
+github.com/golang-jwt/jwt/v5
 # github.com/jackc/pgpassfile v1.0.0
 ## explicit; go 1.12
 github.com/jackc/pgpassfile
@@ -158,6 +164,19 @@ github.com/twitchyliquid64/golang-asm/unsafeheader
 # github.com/ugorji/go/codec v1.2.11
 ## explicit; go 1.11
 github.com/ugorji/go/codec
+# github.com/volatiletech/inflect v0.0.1
+## explicit; go 1.14
+github.com/volatiletech/inflect
+# github.com/volatiletech/null/v8 v8.1.2
+## explicit; go 1.14
+github.com/volatiletech/null/v8
+github.com/volatiletech/null/v8/convert
+# github.com/volatiletech/randomize v0.0.1
+## explicit; go 1.14
+github.com/volatiletech/randomize
+# github.com/volatiletech/strmangle v0.0.1
+## explicit; go 1.14
+github.com/volatiletech/strmangle
 # golang.org/x/arch v0.3.0
 ## explicit; go 1.17
 golang.org/x/arch/x86/x86asm
