@@ -14,5 +14,4 @@ func MapNewsRoutes(charGroup *gin.RouterGroup, h characters.Handlers) {
 	charGroup.PUT("/update", h.Update)
 	charGroup.POST("/image/:name", h.UpdateCharacterImage)
 	charGroup.GET("/image/:id", h.GetImageById)
-	charGroup.GET("", h.Test)
 }

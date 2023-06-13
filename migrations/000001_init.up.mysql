@@ -23,3 +23,13 @@ CREATE TABLE paths
     enname  VARCHAR(250)    NOT NULL,
     picture LONGBLOB        NOT NULL
 );
+
+CREATE TABLE users
+(
+    id INT PRIMARY KEY,
+    username VARCHAR(250) NOT NULL,
+    password VARCHAR(250) NOT NULL,
+    email VARCHAR(250) NOT NULL,
+    refreshtoken VARCHAR(1024) NULL,
+    refreshtokenexpiredate DATETIME NULL
+);

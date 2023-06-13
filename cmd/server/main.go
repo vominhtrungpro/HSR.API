@@ -7,13 +7,9 @@ import (
 	charactergenerator "github.com/vominhtrungpro/internal/characters/generator"
 	elementgenerator "github.com/vominhtrungpro/internal/elements/generator"
 	"github.com/vominhtrungpro/internal/server"
+	usergenerator "github.com/vominhtrungpro/internal/users/generator"
 	mysqlserver "github.com/vominhtrungpro/pkg/db/mysql"
-	// "gorm.io/driver/mysql"
-	// "gorm.io/gen"
-	// "gorm.io/gorm"
 )
-
-//mysqlserver "github.com/vominhtrungpro/pkg/db/mysql"
 
 func main() {
 	log.Println("Starting api server")
@@ -29,6 +25,7 @@ func main() {
 	}
 	charactergenerator.InitSnowflakeGenerators()
 	elementgenerator.InitSnowflakeGenerators()
+	usergenerator.InitSnowflakeGenerators()
 	s := server.NewServer(
 		cfg,
 		conn,
@@ -36,28 +33,4 @@ func main() {
 	if err = s.Run(); err != nil {
 		log.Fatal(err)
 	}
-	//generate()
 }
-
-// func generate() {
-// 	conf := gen.Config{
-// 		OutPath: "../../internal/model/dbmodel",
-// 		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
-// 	}
-// 	g := gen.NewGenerator(conf)
-
-// 	gormdb, _ := gorm.Open(mysql.Open("root:tin14091998@tcp(0.0.0.0:3306)/hsr?parseTime=true"))
-// 	g.UseDB(gormdb) // reuse your gorm db
-
-// 	// Generate basic type-safe DAO API for struct `model.User` following conventions
-
-// 	g.ApplyBasic(
-// 		g.GenerateModel("characters"),
-// 	)
-// 	g.ApplyBasic(
-// 		// Generate structs from all tables of current database
-// 		g.GenerateAllTable()...,
-// 	)
-// 	// Generate the code
-// 	g.Execute()
-// }

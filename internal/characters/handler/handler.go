@@ -113,10 +113,6 @@ func (h charHandler) GetImageById(context *gin.Context) {
 	context.FileAttachment(fileurl, filename)
 }
 
-func (h charHandler) Test(context *gin.Context) {
-	context.IndentedJSON(http.StatusOK, "oke")
-}
-
 func validatecreate(input charactermodel.CreateRequest) error {
 	if strings.TrimSpace(input.Name) == "" {
 		return errInvalidName
