@@ -12,4 +12,5 @@ type Repository interface {
 	Update(ctx context.Context, user model.User) error
 	CheckUsernameIfExist(ctx context.Context, username string) (bool, error)
 	CheckEmailIfExist(ctx context.Context, email string) (bool, error)
+	TestTransaction(ctx context.Context) error
 }

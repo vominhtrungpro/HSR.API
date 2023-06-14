@@ -94,3 +94,13 @@ func valid(email string) bool {
 	_, err := mail.ParseAddress(email)
 	return err == nil
 }
+
+// Login
+func (h userHandler) Transation(context *gin.Context) {
+	err := h.userController.TestTransaction(context)
+	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	context.IndentedJSON(http.StatusOK, "Success")
+}

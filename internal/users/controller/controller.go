@@ -118,3 +118,12 @@ func CreateRefreshToken() (string, error) {
 	token := hex.EncodeToString(b)
 	return token, nil
 }
+
+// Test Transaction
+func (u *userController) TestTransaction(ctx context.Context) error {
+	err := u.userRepo.TestTransaction(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}

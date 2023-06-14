@@ -9,4 +9,5 @@ import (
 type Controller interface {
 	Register(ctx context.Context, request usermodel.CreateUserRequest) error
 	Login(ctx context.Context, input usermodel.LoginInput) (usermodel.LoginOutput, error)
+	TestTransaction(ctx context.Context) error
 }
