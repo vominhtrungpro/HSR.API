@@ -30,6 +30,9 @@ func (r *userRepository) Create(ctx context.Context, user model.User) error {
 func (r *userRepository) GetUserByUsername(ctx context.Context, name string) (model.User, error) {
 	var user model.User
 	if err := r.db.Where("username = ?", name).First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return user, errUserNotFound
+		}
 		return user, err
 	}
 	return user, nil
@@ -38,4 +41,30 @@ func (r *userRepository) GetUserByUsername(ctx context.Context, name string) (mo
 // Update user
 func (r *userRepository) Update(ctx context.Context, user model.User) error {
 	return r.db.Save(&user).Error
+}
+
+func (r *userRepository) CheckUsernameIfExist(ctx context.Context, username string) (bool, error) {
+	var user model.User
+	err := r.db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, nil
+		} else {
+			return false, err
+		}
+	}
+	return true, nil
+}
+
+func (r *userRepository) CheckEmailIfExist(ctx context.Context, email string) (bool, error) {
+	var user model.User
+	err := r.db.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, nil
+		} else {
+			return false, err
+		}
+	}
+	return true, nil
 }

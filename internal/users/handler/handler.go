@@ -40,12 +40,12 @@ func (h userHandler) Login(context *gin.Context) {
 	var request usermodel.LoginInput
 	err := json.NewDecoder(context.Request.Body).Decode(&request)
 	if err != nil {
-		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
+		context.IndentedJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	result, err := h.userController.Login(context, request)
 	if err != nil {
-		http.Error(context.Writer, err.Error(), http.StatusBadRequest)
+		context.IndentedJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	context.IndentedJSON(http.StatusOK, result)

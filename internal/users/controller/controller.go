@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
-	"errors"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -29,6 +29,20 @@ func (u *userController) Register(ctx context.Context, request usermodel.CreateU
 	if err != nil {
 		return err
 	}
+	checkusername, err := u.userRepo.CheckUsernameIfExist(ctx, request.Username)
+	if err != nil {
+		return err
+	}
+	if checkusername {
+		return errUsernameExist
+	}
+	checkemail, err := u.userRepo.CheckEmailIfExist(ctx, request.Email)
+	if err != nil {
+		return err
+	}
+	if checkemail {
+		return errEmailExist
+	}
 	var user = model.User{
 		ID:       int32(id),
 		Username: request.Username,
@@ -51,7 +65,7 @@ func (u *userController) Login(ctx context.Context, input usermodel.LoginInput) 
 	}
 
 	if input.Password != user.Password {
-		return usermodel.LoginOutput{}, errors.New("incorect password")
+		return usermodel.LoginOutput{}, errIncorrectPassword
 	}
 
 	accesstoken, err := CreateAccessToken(user)
@@ -87,7 +101,7 @@ func CreateAccessToken(user model.User) (string, error) {
 		"username": user.Username,
 	})
 
-	tokenString, err := token.SignedString([]byte("SecretYouShouldHide"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	if err != nil {
 		return "", err
 	}

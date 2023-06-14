@@ -12,6 +12,7 @@ type Config struct {
 	Redis    RedisConfig
 	Logger   Logger
 	Metrics  Metrics
+	Secret   Secret
 }
 
 // Server config struct
@@ -89,6 +90,10 @@ type RedisClient struct {
 	MinIdleConns int    `env:"REDIS_CLIENT_MIN_IDLE_CONNS"`
 	PoolSize     int    `env:"REDIS_CLIENT_POOL_SIZE"`
 	PoolTimeout  int    `env:"REDIS_CLIENT_POOL_TIMEOUT"`
+}
+
+type Secret struct {
+	Secret string `env:"SECRET"`
 }
 
 // Load config file from given path
