@@ -12,4 +12,5 @@ func MapNewsRoutes(userGroup *gin.RouterGroup, h users.Handler) {
 	userGroup.POST("/register", h.Register)
 	userGroup.POST("/login", h.Login)
 	userGroup.GET("/transaction", h.Transation)
+	userGroup.GET("/cache/:name", h.GetCache)
 }

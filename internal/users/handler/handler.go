@@ -20,6 +20,13 @@ type userHandler struct {
 	rdb            redis.Client
 }
 
+// User cache
+type CacheValue struct {
+	AccessToken  string `json:"accesstoken"`
+	RefreshToken string `json:"refreshtoken"`
+	LastLogin    string `json:"lastlogin"`
+}
+
 // Characters handlers constructor
 func NewUserHandlers(userController users.Controller, rdb redis.Client) users.Handler {
 	return &userHandler{
@@ -66,11 +73,37 @@ func (h userHandler) Login(ctx *gin.Context) {
 		return
 	}
 	rdbcontext := context.Background()
-	err = h.rdb.Set(rdbcontext, request.Username, "Last login at: "+time.Now().Format("2006-01-02 15:04:05"), 0)
+	cachevalue := CacheValue{
+		AccessToken:  result.AccessToken,
+		RefreshToken: result.RefreshToken,
+		LastLogin:    time.Now().Format("2006-01-02 15:04:05"),
+	}
+	b, err := json.Marshal(cachevalue)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = h.rdb.Set(rdbcontext, request.Username, string(b), 0)
 	if err != nil {
 		panic(err)
 	}
 	ctx.IndentedJSON(http.StatusOK, result)
+}
+
+func (h userHandler) GetCache(context *gin.Context) {
+	charname := context.Param("name")
+	var result CacheValue
+	cache, err := h.rdb.Get(context, charname)
+	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	if err := json.Unmarshal([]byte(cache), &result); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	context.IndentedJSON(http.StatusOK, result)
 }
 
 // Validate login
