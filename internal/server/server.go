@@ -10,14 +10,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/vominhtrungpro/config"
+	"github.com/vominhtrungpro/pkg/cache/redis"
 	"gorm.io/gorm"
 )
 
 // Server struct
 type Server struct {
-	gin *gin.Engine
-	cfg *config.Config
-	db  *gorm.DB
+	gin   *gin.Engine
+	cfg   *config.Config
+	db    *gorm.DB
+	redis redis.Client
 }
 
 // NewServer New Server constructor

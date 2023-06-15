@@ -95,7 +95,7 @@ when GORM AutoMigrate because SQLite doesn't have time type.
 
 ## JSON_SET
 
-sqlite, mysql supported
+sqlite, mysql, postgres supported
 
 ```go
 import (
@@ -139,6 +139,23 @@ DB.Model(&UserWithJSON{}).Where("name = ?", "json-1").UpdateColumn("attributes",
 ```
 NOTE: MariaDB does not support CAST(? AS JSON).
 
+NOTE: Path in PostgreSQL is different.
+
+```go
+// Set fields of JSON column
+datatypes.JSONSet("attributes").Set("{age}", 20).Set("{tags, 0}", "tag2").Set("{orgs, orga}", "orgb")
+
+DB.Model(&UserWithJSON{}).Where("name = ?", "json-1").UpdateColumn("attributes", datatypes.JSONSet("attributes").Set("{age}", 20).Set("{tags, 0}", "tag2").Set("{orgs, orga}", "orgb"))
+DB.Model(&UserWithJSON{}).Where("name = ?", "json-1").UpdateColumn("attributes", datatypes.JSONSet("attributes").Set("{phones}", []string{"10085", "10086"}))
+DB.Model(&UserWithJSON{}).Where("name = ?", "json-1").UpdateColumn("attributes", datatypes.JSONSet("attributes").Set("{phones}", gorm.Expr("?::jsonb", `["10085", "10086"]`)))
+DB.Model(&UserWithJSON{}).Where("name = ?", "json-1").UpdateColumn("attributes", datatypes.JSONSet("attributes").Set("{friend}", friend))
+// PostgreSQL
+// UPDATE "user_with_jsons" SET "attributes" = JSONB_SET(JSONB_SET(JSONB_SET("attributes", '{age}', '20'), '{tags, 0}', '"tag2"'), '{orgs, orga}', '"orgb"') WHERE name = 'json-1'
+// UPDATE "user_with_jsons" SET "attributes" = JSONB_SET("attributes", '{phones}', '["10085","10086"]') WHERE name = 'json-1'
+// UPDATE "user_with_jsons" SET "attributes" = JSONB_SET("attributes", '{phones}', '["10085","10086"]'::jsonb) WHERE name = 'json-1'
+// UPDATE "user_with_jsons" SET "attributes" = JSONB_SET("attributes", '{friend}', '{"Name": "Bob", "Age": 21}') WHERE name = 'json-1'
+```
+
 ## JSONType[T]
 
 sqlite, mysql, postgres supported
@@ -162,7 +179,7 @@ type UserWithJSON struct {
 }
 
 var user = UserWithJSON{
-	Name: "hello"
+	Name: "hello",
 	Attributes: datatypes.JSONType[Attribute]{
 		Data: Attribute{
 			Age:  18,
@@ -196,6 +213,48 @@ DB.Model(&user).Updates(jsonMap)
 ```
 
 NOTE: it's not support json query
+
+## JSONSlice[T]
+
+sqlite, mysql, postgres supported
+
+```go
+import "gorm.io/datatypes"
+
+type Tag struct {
+	Name  string
+	Score float64
+}
+
+type UserWithJSON struct {
+	gorm.Model
+	Name       string
+	Tags       datatypes.JSONSlice[Tag]
+}
+
+var tags = []Tag{{Name: "tag1", Score: 0.1}, {Name: "tag2", Score: 0.2}}
+var user = UserWithJSON{
+	Name: "hello",
+	Tags: datatypes.NewJSONSlice(tags),
+}
+
+// Create
+DB.Create(&user)
+
+// First
+var result UserWithJSON
+DB.First(&result, user.ID)
+
+// Update
+var tags2 = []Tag{{Name: "tag3", Score: 10.1}, {Name: "tag4", Score: 10.2}}
+jsonMap = UserWithJSON{
+	Tags: datatypes.NewJSONSlice(tags2),
+}
+
+DB.Model(&user).Updates(jsonMap)
+```
+
+NOTE: it's not support json query and `db.Pluck` method
 
 ## JSONArray
 

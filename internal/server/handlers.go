@@ -27,7 +27,7 @@ func (s *Server) MapHandlers() error {
 	// Init handlers
 	cHdler := characterHandler.NewCharsHandlers(cCtrl)
 	eHdler := elementHandler.NewElementHandlers(eCtrl)
-	uHdler := userHandler.NewUserHandlers(uCtrl)
+	uHdler := userHandler.NewUserHandlers(uCtrl, s.redis)
 
 	v1 := s.gin.Group("/api/v1")
 	charactersGroup := v1.Group("/characters")
@@ -36,6 +36,5 @@ func (s *Server) MapHandlers() error {
 	characterHandler.MapNewsRoutes(charactersGroup, cHdler)
 	elementHandler.MapNewsRoutes(elementsGroup, eHdler)
 	userHandler.MapNewsRoutes(usersGroup, uHdler)
-
 	return nil
 }

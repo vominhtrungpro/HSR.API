@@ -1,24 +1,31 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/mail"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vominhtrungpro/internal/users"
 	"github.com/vominhtrungpro/internal/users/usermodel"
+	"github.com/vominhtrungpro/pkg/cache/redis"
 )
 
 // Users handler
 type userHandler struct {
 	userController users.Controller
+	rdb            redis.Client
 }
 
 // Characters handlers constructor
-func NewUserHandlers(userController users.Controller) users.Handler {
-	return &userHandler{userController: userController}
+func NewUserHandlers(userController users.Controller, rdb redis.Client) users.Handler {
+	return &userHandler{
+		userController: userController,
+		rdb:            rdb,
+	}
 }
 
 // Register user handler
@@ -42,23 +49,28 @@ func (h userHandler) Register(context *gin.Context) {
 }
 
 // Login
-func (h userHandler) Login(context *gin.Context) {
+func (h userHandler) Login(ctx *gin.Context) {
 	var request usermodel.LoginInput
-	err := json.NewDecoder(context.Request.Body).Decode(&request)
+	err := json.NewDecoder(ctx.Request.Body).Decode(&request)
 	if err != nil {
-		context.IndentedJSON(http.StatusBadRequest, err.Error())
+		ctx.IndentedJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	if err := validatelogin(request); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, err.Error())
+		ctx.IndentedJSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	result, err := h.userController.Login(context, request)
+	result, err := h.userController.Login(ctx, request)
 	if err != nil {
-		context.IndentedJSON(http.StatusBadRequest, err.Error())
+		ctx.IndentedJSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	context.IndentedJSON(http.StatusOK, result)
+	rdbcontext := context.Background()
+	err = h.rdb.Set(rdbcontext, request.Username, "Last login at: "+time.Now().Format("2006-01-02 15:04:05"), 0)
+	if err != nil {
+		panic(err)
+	}
+	ctx.IndentedJSON(http.StatusOK, result)
 }
 
 // Validate login
